@@ -26,10 +26,10 @@ public class Wget implements Runnable {
             while ((bytesRead = input.read(dataBuffer, 0, dataBuffer.length)) != -1) {
                 var downLoadedAt = System.nanoTime();
                 output.write(dataBuffer, 0, bytesRead);
-                var measuredTime = System.nanoTime() - downLoadedAt;
-                var measuredSpeed = bytesRead / measuredTime * 1000000L;
-                if (speed < measuredSpeed) {
-                    Thread.sleep(measuredSpeed / speed - measuredTime);
+                var measuredTime = (System.nanoTime() - downLoadedAt) / 1000000L;
+                var estimatedTime = bytesRead / speed;
+                if (measuredTime < estimatedTime) {
+                    Thread.sleep(estimatedTime - measuredTime);
                 }
             }
         } catch (IOException | InterruptedException e) {
