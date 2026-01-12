@@ -21,15 +21,14 @@ public class Wget implements Runnable {
         var file = new File("downloaded.xml");
         try (var input = new URL(url).openStream();
         var output = new FileOutputStream(file)) {
-            var dataBuffer = new byte[1024];
+            var dataBuffer = new byte[speed];
             int bytesRead;
+            var currTime = System.currentTimeMillis();
             while ((bytesRead = input.read(dataBuffer, 0, dataBuffer.length)) != -1) {
-                var downLoadedAt = System.nanoTime();
                 output.write(dataBuffer, 0, bytesRead);
-                var measuredTime = (System.nanoTime() - downLoadedAt) / 1000000L;
-                var estimatedTime = bytesRead / speed;
-                if (measuredTime < estimatedTime) {
-                    Thread.sleep(estimatedTime - measuredTime);
+                var measuredTime = currTime - System.currentTimeMillis();
+                if (measuredTime < 1000L) {
+                    Thread.sleep(1000L - measuredTime);
                 }
             }
         } catch (IOException | InterruptedException e) {
@@ -52,6 +51,9 @@ public class Wget implements Runnable {
     }
 
     public static void main(String[] args) throws InterruptedException {
+        if (args.length < 2) {
+            throw new RuntimeException("Необходимо указать адрес для скачивания и ограничение по скорости");
+        }
         String url = args[0];
         int speed = Integer.parseInt(args[1]);
         if (validateInput(url, speed)) {
