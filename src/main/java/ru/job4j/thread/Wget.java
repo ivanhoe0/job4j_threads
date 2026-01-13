@@ -21,15 +21,20 @@ public class Wget implements Runnable {
         var file = new File("downloaded.xml");
         try (var input = new URL(url).openStream();
         var output = new FileOutputStream(file)) {
-            var dataBuffer = new byte[speed];
+            var dataBuffer = new byte[1024];
             int bytesRead;
+            var totalBytes = 0;
             var currTime = System.currentTimeMillis();
             while ((bytesRead = input.read(dataBuffer, 0, dataBuffer.length)) != -1) {
-                output.write(dataBuffer, 0, bytesRead);
-                var measuredTime = currTime - System.currentTimeMillis();
-                if (measuredTime < 1000L) {
-                    Thread.sleep(1000L - measuredTime);
+                totalBytes += bytesRead;
+                if (totalBytes >= speed) {
+                    var measuredTime = System.currentTimeMillis() - currTime;
+                    var estimatedTime = totalBytes / speed * 1000L;
+                    if (measuredTime < estimatedTime) {
+                        Thread.sleep(estimatedTime - measuredTime);
+                    }
                 }
+                output.write(dataBuffer, 0, bytesRead);
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
