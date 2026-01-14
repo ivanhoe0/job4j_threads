@@ -29,10 +29,11 @@ public class Wget implements Runnable {
                 totalBytes += bytesRead;
                 if (totalBytes >= speed) {
                     var measuredTime = System.currentTimeMillis() - currTime;
-                    var estimatedTime = totalBytes / speed * 1000L;
-                    if (measuredTime < estimatedTime) {
-                        Thread.sleep(estimatedTime - measuredTime);
+                    if (1000 > measuredTime) {
+                        Thread.sleep(1000 - measuredTime);
                     }
+                    currTime = System.currentTimeMillis();
+                    totalBytes = 0;
                 }
                 output.write(dataBuffer, 0, bytesRead);
             }
