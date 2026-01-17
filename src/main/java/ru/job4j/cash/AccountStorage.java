@@ -28,8 +28,8 @@ public class AccountStorage {
     }
 
     public synchronized boolean transfer(int fromId, int toId, int amount) {
-        var fromAcc = getById(fromId).orElse(new Account(fromId, amount));
-        var toAcc = getById(toId).orElse(new Account(toId, amount));
+        var fromAcc = getById(fromId).orElseThrow(() -> new IllegalArgumentException("Theres is no account with id " + fromId));
+        var toAcc = getById(toId).orElseThrow(() -> new IllegalArgumentException("There is no account with id " + toId));
         return update(new Account(
                 fromAcc.id(),
                 fromAcc.amount() - amount))

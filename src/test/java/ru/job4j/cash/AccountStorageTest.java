@@ -2,6 +2,8 @@ package ru.job4j.cash;
 
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AccountStorageTest {
 
@@ -50,6 +52,9 @@ class AccountStorageTest {
     void whenTransferThatDontExist() {
         var storage = new AccountStorage();
         storage.add(new Account(1, 100));
-        assertThat(storage.transfer(1, 2, 10)).isFalse();
+        assertThrows(IllegalArgumentException.class, () -> {
+            storage.transfer(1, 2, 10);
+            throw new IllegalStateException("Theres is no account with id 2");
+        });
     }
 }
