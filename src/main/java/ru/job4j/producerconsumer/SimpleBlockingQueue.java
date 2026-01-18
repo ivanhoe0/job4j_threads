@@ -26,10 +26,8 @@ public class SimpleBlockingQueue<T> {
                     Thread.currentThread().interrupt();
                 }
             }
-            if (queue.size() == 0) {
-                this.notifyAll();
-            }
             queue.offer(value);
+            this.notifyAll();
         }
     }
 
@@ -42,10 +40,9 @@ public class SimpleBlockingQueue<T> {
             while (queue.size() == 0) {
                 this.wait();
             }
-            if (size == queue.size()) {
-                this.notifyAll();
-            }
-            return queue.poll();
+            T result = queue.poll();
+            this.notifyAll();
+            return result;
         }
     }
 }
