@@ -20,14 +20,14 @@ public class ElementSearching<T> extends RecursiveTask<Integer> {
     @Override
     protected Integer compute() {
         if (to - from < 10) {
-            return findElement(element, from, to);
+            return findElement();
         }
         int middle = (from + to) / 2;
         ElementSearching<T> leftArray = new ElementSearching<>(array, element, from, middle);
         ElementSearching<T> rightArray = new ElementSearching<>(array, element, middle + 1, to);
         leftArray.fork();
         rightArray.fork();
-        return chooseResult(leftArray.join(), rightArray.join());
+        return Math.max(leftArray.join(), rightArray.join());
     }
 
     public static <T> int find(T[] array, T element) {
@@ -35,21 +35,14 @@ public class ElementSearching<T> extends RecursiveTask<Integer> {
         return forkJoinPool.invoke(new ElementSearching<>(array, element, 0, array.length - 1));
     }
 
-    private int findElement(T element, int from, int to) {
+    private int findElement() {
         int result = -1;
         for (int i = from; i <= to; i++) {
             if (array[i].equals(element)) {
                 result = i;
+                break;
             }
         }
         return result;
-    }
-
-    private static int chooseResult(int a, int b) {
-        if (a != -1) {
-            return a;
-        } else {
-            return b;
-        }
     }
 }
