@@ -14,9 +14,10 @@ class RolColSumTest {
         for (int col = 0; col < array.length; col++) {
             Arrays.fill(array[col], 1);
         }
-        RolColSum.Sums[] sums = RolColSum.sum(array);
-        assertThat(sums[0].getColSum()).isEqualTo(4);
-        assertThat(sums[1].getRowSum()).isEqualTo(4);
+        Sums[] sums = RolColSum.sum(array);
+        Sums[] expected = new Sums[4];
+        Arrays.fill(expected, new Sums(4, 4));
+        assertThat(sums).isEqualTo(expected);
     }
 
     @Test
@@ -25,14 +26,9 @@ class RolColSumTest {
         for (int col = 0; col < array.length; col++) {
             Arrays.fill(array[col], 1);
         }
-        RolColSum.Sums[] sums = RolColSum.asyncSum(array);
-        assertThat(sums[0].getColSum()).isEqualTo(4);
-        assertThat(sums[0].getRowSum()).isEqualTo(4);
-        assertThat(sums[1].getColSum()).isEqualTo(4);
-        assertThat(sums[1].getRowSum()).isEqualTo(4);
-        assertThat(sums[2].getColSum()).isEqualTo(4);
-        assertThat(sums[2].getRowSum()).isEqualTo(4);
-        assertThat(sums[3].getColSum()).isEqualTo(4);
-        assertThat(sums[3].getRowSum()).isEqualTo(4);
+        Sums[] sums = RolColSum.asyncSum(array);
+        Sums[] expected = new Sums[4];
+        Arrays.fill(expected, new Sums(4, 4));
+        assertThat(sums).isEqualTo(expected);
     }
 }
